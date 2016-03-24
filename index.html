@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8 ; no-cache" />
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
+		<script>
+			$(document).ready(function(){
+			//	$("#p1").hide();
+				$("#BU1").click(function(event){
+					var rarities = document.getElementsByName("rarity");
+					var rarity = "";
+					for(var i=0;i<rarities.length;i++){
+						if(rarities[i].checked){
+							rarity=rarities[i].value;
+							break;
+						}
+					}
+					var kinds = document.getElementsByName("kind");
+					var kind = "";
+					for(var i=0;i<kinds.length;i++){
+						if(kinds[i].checked){
+							kind=kinds[i].value;
+							break;
+						}
+					}
+					var colors = document.getElementsByName("cor");
+					var cor = "";
+					for(var i=0;i<colors.length;i++){
+						if(colors[i].checked){
+							cor=colors[i].value;
+							break;
+						}
+					}
+						event.preventDefault();
+						var requestData = { cor:cor };
+						$.get('LL1.php',requestData,function(data){
+					$("#p1").html(data);
+					$(document).ajaxStop(function(){
+					    $("#BU2").click(function(event){
+							var rarities = document.getElementsByName("rarity");
+							var rarity = "";
+							for(var i=0;i<rarities.length;i++){
+								if(rarities[i].checked){
+									rarity=rarities[i].value;
+									break;
+								}
+							}					    	
+					    	var abilities = document.getElementsByName("ability");
+					    	var ability = "";
+					    	for (var i=0;i<abilities.length;i++){
+					    		if(abilities[i].checked){
+					    			ability = abilities[i].value;
+					    			break;
+					    		}
+					    	}
+					    	var kinds1 = document.getElementsByName("kind1");
+					    	var kind1 = "";
+					    	for (var i=0;i<kinds1.length;i++){
+					    		if(kinds1[i].checked){
+					    			kind1 = kinds1[i].value;
+					    			break;
+					    		}
+					    	}
+					  		var kinds2 = document.getElementsByName("kind2");
+					  		var kind2 = "";
+					  		for(var i=0;i<kinds2.length;i++){
+					  		 	if(kinds2[i].checked){
+					  		 	 	kind2=kinds2[i].value;
+					  		 	 	break;
+					  		 	}
+					  		};
+					  		event.preventDefault();
+					  		requestData = { cor:cor , ability:ability , kind1:kind1 , kind2:kind2 };
+					  		$.get("LL2.php",requestData,function(data){
+					  		 	$("#p2").html(data);
+					  		 	$(document).ajaxStop(function(){
+					  		 		$("#BU3").click(function(event){
+					  		 			var num1 = document.getElementById("num1").value;
+					  		 			var num2 = document.getElementById("num2").value;
+					  		 			var num3 = document.getElementById("num3") == null ? 0 :document.getElementById("num3").value;
+					  		 			var num4 = document.getElementById("num4").value;
+					  		 			var num5 = document.getElementById("num5").value;
+					  		 			var title = countnum(rarity,kind,cor,num1,num3,kind1,kind2,num4,num5,num2,ability);
+					  		 			$("#p3").html(title);
+					  		 		})
+					  		 	})
+					  		})
+					    })
+					})
+					  //alert(data);
+					})
+				})
+			})
+		function countnum(rarity,kind,cor,num1,num3,kind1,kind2,num4,num5,num2,ability){
+			var STRENGTH = 52500;
+			var TIME = 120;
+			var COMBO = 500;
+			var PERFECT = 0.95;
+			var STAR = 65;
+			var N = 1.02;
+			var J = 1.00 * PERFECT + 0.88 * (1.0 - PERFECT);
+			var C = 1.17;
+			var M = 1.10;
+			var B = STRENGTH * 0.0125;
+			var S = B*N*J*C*M;
+			var shuxing = num1;
+			var ban;
+			if( rarity==1 && kind==1 )ban=1000;
+			if( rarity==1 && kind==2 )ban=500;
+			if( rarity==2 && kind==1 )ban=500;
+			if( rarity==2 && kind==2 )ban=250;
+			if( rarity==3 && kind==1 )ban=200;
+			if( rarity==3 && kind==2 )ban=100;
+			if( rarity==4 && kind==1 )ban=50;
+			if( rarity==4 && kind==2 )ban=25;
+			var carryskill;//carry技能加成
+			if(ability>=4 && ability <= 9)carryskill = num3 * 0.12;
+			if(ability == 3) carryskill = num1 * 0.09;
+			if(ability == 2) carryskill = num1 * 0.06;
+			if(ability == 1) carryskill = num1 * 0.03;
+			var skill = 0;
+			if (kind1 == 1){
+				if (kind2 == 1)
+					skill = TIME / num4 * num5 * 0.01 * num2 / COMBO / S*STRENGTH;
+				if (kind2 == 2)
+					skill = COMBO / num4 * num5 * 0.01 * num2 / COMBO / S*STRENGTH;
+				if (kind2 == 3)
+					skill = COMBO / num4 * num5 * 0.01 * num2 / COMBO / S*STRENGTH;
+				if (kind2 == 4)
+					skill = S*COMBO / num4 * num5 * 0.01 * num2 / COMBO / S*STRENGTH;
+				if (kind2 == 5)
+					skill = COMBO*PERFECT / num4 * num5 * 0.01*num2 / COMBO / S*STRENGTH;
+				if (kind2 == 6)
+					skill = STAR*PERFECT*num5 * 0.01*num2 / COMBO / S*STRENGTH;
+			}			
+		var panding=0;//判定覆盖率
+		if (kind1 == 3){
+			if (kind2 == 1)
+				panding = TIME /((num4+num2)*num5*0.01+num4*(1-num5*0.01)) * num5 * 0.01*num2 / TIME;
+			if (kind2 == 2)
+				panding = COMBO / num4 * num5 * 0.01*num2 / TIME;
+			if (kind2 == 3)
+				panding = COMBO / num4 * num5 * 0.01*num2 / TIME;
+			if (kind2 == 4)
+				panding = S*COMBO / num4 * num5 * 0.01*num2 / TIME;
+			if (kind2 == 5)
+				panding = COMBO*PERFECT / num4 * num5 * 0.01*num2 / TIME;
+			if (kind2 == 6)
+				panding = STAR*PERFECT*num5 * 0.01*num2 / TIME;
+		}
+		var huifu = 0;//回血期望
+		if (kind1 == 2){
+			if (kind2 == 1)
+				huifu = TIME / num4 * num5 * 0.01*num2 / COMBO;
+			if (kind2 == 2)
+				huifu = COMBO / num4 * num5 * 0.01*num2 / COMBO;
+			if (kind2 == 3)
+				huifu = COMBO / num4 * num5 * 0.01*num2 / COMBO;
+			if (kind2 == 4)
+				huifu = S*COMBO / num4 * num5 * 0.01*num2 / COMBO;
+			if (kind2 == 5)
+				huifu = COMBO*PERFECT / num4 * num5 * 0.01 * num2 / COMBO;
+			if (kind2 == 6)
+				huifu = STAR*PERFECT * num5 * 0.01*num2 / COMBO;
+		}
+		var carryskill_ = Math.floor(carryskill*10) / 10;
+		var skill_ = Math.floor(skill*10) / 10;
+		var strength = Math.floor(10*(parseInt(shuxing) + parseInt(ban) + parseFloat(carryskill_) + parseFloat(skill_)))/10;
+		var panding_ = Math.floor(panding *10000) / 100;
+		var huifu_ = Math.floor(huifu * 10000)/10000;
+		var type = "属性强度：" + shuxing + "\n" + 
+					"绊加成：" + ban + "\n" +  
+					"主唱技能加成：" + carryskill_  + "\n" + 
+					"技能加成：" + skill_  + "\n" + 
+					"卡片强度：" + strength  + "\n";
+		if(kind1 == 3) type = type + "判定覆盖率：" + panding_ + "%";
+		if(kind1 == 2) type = type =  "回血期望：" + huifu_ + "/note";
+		//alert(type);
+		return type;
+		}
+		</script>
+	</head>
+
+	<body>
+		<br /><br /><br />
+		<form action="javascript:h1();" method="get">
+			请选择稀有度：
+			<input type="radio" name="rarity" value="1" /> UR
+			<input type="radio" name="rarity" value="2" /> SR
+			<input type="radio" name="rarity" value="3" /> R
+			<input type="radio" name="rarity" value="4" /> N
+			<br /> 请选择是否觉醒：
+			<input type="radio" name="kind" value="1" /> 是
+			<input type="radio" name="kind" value="2" /> 否
+			<br /> 请选择卡片颜色：
+			<input type="radio" name="cor" value="1" /> 红色
+			<input type="radio" name="cor" value="2" /> 绿色
+			<input type="radio" name="cor" value="3" /> 蓝色
+			<br />
+		</form>
+		<button id="BU1">NEXT</button>
+		<p id="p1">
+		</p>
+		<p id="p2">
+		</p>
+		<p id="p3"></p>
+	</body>
+
+</html>
