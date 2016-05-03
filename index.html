@@ -2,7 +2,8 @@
 <html>
 
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8 ; no-cache" />
+		<link rel="stylesheet" href="t.css">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8 ; no-cache" />
 		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js"></script>
 		<script>
 			$(document).ready(function(){
@@ -45,7 +46,7 @@
 									rarity=rarities[i].value;
 									break;
 								}
-							}					    	
+							}
 					    	var abilities = document.getElementsByName("ability");
 					    	var ability = "";
 					    	for (var i=0;i<abilities.length;i++){
@@ -133,7 +134,7 @@
 					skill = COMBO*PERFECT / num4 * num5 * 0.01*num2 / COMBO / S*STRENGTH;
 				if (kind2 == 6)
 					skill = STAR*PERFECT*num5 * 0.01*num2 / COMBO / S*STRENGTH;
-			}			
+			}
 		var panding=0;//判定覆盖率
 		if (kind1 == 3){
 			if (kind2 == 1)
@@ -169,13 +170,13 @@
 		var strength = Math.floor(10*(parseInt(shuxing) + parseInt(ban) + parseFloat(carryskill_) + parseFloat(skill_)))/10;
 		var panding_ = Math.floor(panding *10000) / 100;
 		var huifu_ = Math.floor(huifu * 10000)/10000;
-		var type = "属性强度：" + shuxing + "\n" + 
-					"绊加成：" + ban + "\n" +  
-					"主唱技能加成：" + carryskill_  + "\n" + 
-					"技能加成：" + skill_  + "\n" + 
+		var type = "属性强度：" + shuxing + "\n" +
+					"绊加成：" + ban + "\n" +
+					"主唱技能加成：" + carryskill_  + "\n" +
+					"技能加成：" + skill_  + "\n" +
 					"卡片强度：" + strength  + "\n";
 		if(kind1 == 3) type = type + "判定覆盖率：" + panding_ + "%";
-		if(kind1 == 2) type = type =  "回血期望：" + huifu_ + "/note";
+		if(kind1 == 2) type = type +  "回血期望：" + huifu_ + "/note";
 		//alert(type);
 		return type;
 		}
@@ -183,6 +184,7 @@
 	</head>
 
 	<body>
+    <div class="example">
 		<br /><br /><br />
 		<form action="javascript:h1();" method="get">
 			请选择稀有度：
@@ -205,6 +207,7 @@
 		<p id="p2">
 		</p>
 		<p id="p3"></p>
+    </div>
 	</body>
 
 </html>
